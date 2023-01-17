@@ -43,6 +43,18 @@
                     </div>
 
                     <div class="mb-3">
+                        <h6>Tecnologie utilizzate:</h6>
+                        @foreach ($technologies as $technology)
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="technologies[]"
+                                    id="technology-{{ $technology->id }}" value="{{ $technology->id }}">
+                                <label class="form-check-label" for="technology-{{ $technology->id }}">
+                                    {{ $technology->name }}</label>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <div class="mb-3">
                         <label for="cover_image" class="form-label">Immagine del progetto</label>
                         <input type="file" name="cover_image" id="cover_image"
                             class="form-control

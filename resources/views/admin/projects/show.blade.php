@@ -5,10 +5,17 @@
         <h1 class="text-center mt-3">{{ $project->title }}</h1>
 
         <h4 class="text-center text-secondary mt-3">Tipologia:
-            {{ $project->type ? $project->type->name : 'Nessuna categoria' }}</h4>
+            {{ $project->type ? $project->type->name : 'Nessuna tipologia' }}</h4>
 
         <h5 class="text-center my-3">Data creazione: {{ $project->created_at }}</h5>
 
+        <h5>Tecnologie utilizzate per la realizzazione e l'esecuzione: </h5>
+
+        @forelse ($project->technologies as $technology)
+            <span>-{{ $technology->name }} </span>
+        @empty
+            <span>Nessuna.</span>
+        @endforelse
 
         @if ($project->cover_image)
             <div class="image-preview mx-auto w-75">
