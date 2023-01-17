@@ -17,8 +17,8 @@ class Project extends Model
         return $this->belongsTo(Type::class);
     }
 
-    // public static function generateSlug($title)
-    // {
-    //     return Str::slug($title, '-');
-    // }
+    public function tecnologies()
+    {
+        return $this->belongsToMany(Technology::class);
+    }
 }
