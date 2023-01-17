@@ -71,7 +71,6 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        // dd($project);
         return view('admin.projects.show', compact('project'));
     }
 
@@ -84,7 +83,8 @@ class ProjectController extends Controller
     public function edit(Project $project)
     {
         $types = Type::all();
-        return view('admin.projects.edit', compact('project', 'types'));
+        $technologies = Technology::all();
+        return view('admin.projects.edit', compact('project', 'types', 'technologies'));
     }
 
     /**
@@ -98,6 +98,8 @@ class ProjectController extends Controller
     {
         $form_data = $request->validated();
         $form_data['slug'] = Helpers::generateSlug($form_data['title']);
+
+        //Cover image
         if ($request->hasFile('cover_image')) {
             if ($project->cover_image) {
                 Storage::delete($project->cover_image);
@@ -108,6 +110,13 @@ class ProjectController extends Controller
         }
 
         $project->update($form_data);
+
+        //Technologies
+        if ($request->has('technologies')) {
+            $project->technologies()->sync($request->technologies);
+        } else {
+            $project->technologies()->detach();
+        }
 
         return redirect()->route('admin.projects.index')->with('message', "$project->title aggiornato!");
     }
@@ -120,6 +129,7 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
+        $project->technologies()->detach();
         $project->delete();
         return redirect()->route('admin.projects.index')->with('message', "$project->title è stato cancellato");
     }
