@@ -41,7 +41,7 @@
                 <table class="table">
                     <thead class="thead-dark">
                         <tr>
-                            <th scope="col" class="w-50">Tipologia</th>
+                            <th scope="col" class="w-50">Nome tipologia</th>
                             <th scope="col" class="w-25">Progetti associati</th>
                             <th scope="col" class="w-25">Azioni</th>
                         </tr>
@@ -50,7 +50,13 @@
                         @foreach ($types as $type)
                             <tr>
                                 <td>
-                                    {{ $type->name }}
+                                    <form id="change-type-{{ $type->id }}"
+                                        action="{{ route('admin.types.update', $type->slug) }}" method="POST">
+                                        @method('PUT')
+                                        @csrf
+                                        <input class="form-control border-0" type="text" name="name" id="name"
+                                            value="{{ $type->name }}">
+                                    </form>
                                 </td>
 
                                 <td class="text-center">
@@ -58,11 +64,23 @@
                                 </td>
 
                                 <td>
-                                    <button type=""
-                                        class="ms-2 d-inline-block btn btn-danger ms_btn-square-2 rounded-circle">
-                                        <i
-                                            class="fa-regular fa-trash-can d-flex justify-content-center align-items-center text-light"></i>
-                                    </button>
+                                    <div class="ms_type-actions d-flex">
+                                        <button class="ms-2 btn btn-primary ms_btn-square-2 rounded-circle"
+                                            form="change-type-{{ $type->id }}" type="submit">
+                                            <i
+                                                class="fa-solid fa-file-pen d-flex justify-content-center align-items-center text-light"></i>
+                                        </button>
+
+                                        <form action="{{ route('admin.types.destroy', $type->slug) }}" method="post">
+                                            @method('DELETE')
+                                            @csrf
+                                            <button type="submit"
+                                                class="ms-2 d-inline-block btn btn-danger ms_btn-square-2 rounded-circle">
+                                                <i
+                                                    class="fa-regular fa-trash-can d-flex justify-content-center align-items-center text-light"></i>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach

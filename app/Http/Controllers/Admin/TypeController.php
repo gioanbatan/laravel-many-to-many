@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Functions\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\Type;
+use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 
 class TypeController extends Controller
@@ -57,9 +58,18 @@ class TypeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Type $type)
     {
-        //
+        $form_data = $request->validate(
+            [
+                'name' => ['required', Rule::unique('types')->ignore('$type')]
+            ]
+        );
+        $form_data['slug'] = Helpers::generateSlug($form_data['name']);
+
+        $type->update($form_data);
+
+        return redirect()->back()->with('message', "La tipologia $type->name è stata modificata.");
     }
 
     /**
@@ -68,8 +78,9 @@ class TypeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Type $type)
     {
-        //
+        $type->delete();
+        return redirect()->back()->with('message', "La tipologia $type->name è stata eliminata.");
     }
 }
